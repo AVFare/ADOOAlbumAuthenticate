@@ -4,4 +4,5 @@ import com.adoo.album.model.entity.Usuario;
 
 public interface IUsuarioDAO {
 	public Usuario findUser(String username, String password);
+	public Usuario findUser(String username);
 }

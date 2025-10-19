@@ -18,4 +18,12 @@ public class UsuarioServiceImpl implements IUsuarioService {
 		return usuario;
 	}
 
+	@Override
+	public Usuario findUser(String username) {
+		Usuario usuario = usuariosDAO.findUser(username);
+		return usuario;
+	}
+
+	
+
 }

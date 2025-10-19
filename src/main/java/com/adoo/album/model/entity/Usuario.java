@@ -4,6 +4,8 @@ import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,16 +21,18 @@ public class Usuario {
 	private Long id;
 	private String username;
 	private String password;
+	@Enumerated(EnumType.STRING)
+	private Role role;
+
 
 	public Usuario() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	public Usuario(String username, String password) {
-		super();
+	public Usuario(String username, String password, Role role) {
 		this.username = username;
 		this.password = password;
+		this.role = role;
 	}
 
 	public Long getId() {
@@ -54,10 +58,18 @@ public class Usuario {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	
+	public Role getRole() {
+		return role;
+	}
 
+	public void setRole(Role role) {
+		this.role = role;
+	}
+	
 	@Override
 	public String toString() {
-		return "Usuario [id=" + id + ", username=" + username + ", password=" + password + "]";
+		return "Usuario [id=" + id + ", username=" + username + ", password=" + password + ", role=" + role + "]";
 	}
 
 }

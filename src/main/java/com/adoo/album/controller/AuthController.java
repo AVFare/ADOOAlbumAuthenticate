@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.adoo.album.model.entity.UsuarioDTO;
+import com.adoo.album.model.entity.exceptions.UserAlreadyExistsException;
+import com.adoo.album.service.IAuthService;
 import com.adoo.album.service.IUsuarioService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -22,6 +24,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class AuthController {
 
 	private final int EXPIRATION_TIME_IN_MIN = 60;
+	
+	@Autowired
+	private IAuthService service;
 
 	@Autowired
 	private IUsuarioService usuarioService;
@@ -44,5 +49,17 @@ public class AuthController {
 			return new ResponseEntity<>("Credenciales inválidas.", HttpStatus.UNAUTHORIZED);
 		}
 	}
+
+	@PostMapping("/register")
+	public ResponseEntity<String> register(@RequestBody UsuarioDTO nuevoUsuario) {
+		if(usuarioService.findUser(nuevoUsuario.getUsername()) == null){
+
+			return new ResponseEntity<> ("Hola", HttpStatus.OK);
+		}
+		else {
+			throw new UserAlreadyExistsException(nuevoUsuario.getUsername());
+		}
+	}
+	
 
 }

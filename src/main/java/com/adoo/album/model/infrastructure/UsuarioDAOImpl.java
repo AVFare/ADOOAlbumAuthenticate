@@ -19,6 +19,7 @@ public class UsuarioDAOImpl implements IUsuarioDAO {
 	@Override
 	@Transactional(readOnly = true)
 	public Usuario findUser(String username, String password) {
+		//todo: mejorar este método porque está medio raro.
 		Session currentSession = entityManager.unwrap(Session.class);
 
 		Query<Usuario> theQuery = currentSession.createQuery("FROM Usuario WHERE username=:username", Usuario.class);
@@ -27,6 +28,25 @@ public class UsuarioDAOImpl implements IUsuarioDAO {
 		Usuario user = theQuery.uniqueResult();
 
 		if(user != null && checkPassword(password, user.getPassword())) {
+			return user;
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Usuario findUser(String username) {
+
+		//todo: mejorar este método porque está medio raro.
+		Session currentSession = entityManager.unwrap(Session.class);
+
+		Query<Usuario> theQuery = currentSession.createQuery("FROM Usuario WHERE username=:username", Usuario.class);
+		theQuery.setParameter("username", username);
+
+		Usuario user = theQuery.uniqueResult();
+
+		if(user != null) {
 			return user;
 		} else {
 			return null;
