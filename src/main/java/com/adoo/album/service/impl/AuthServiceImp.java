@@ -1,4 +1,4 @@
-package com.adoo.album.service;
+package com.adoo.album.service.impl;
 
 import java.util.Date;
 
@@ -13,6 +13,8 @@ import com.adoo.album.model.dto.RegisterRequestDTO;
 import com.adoo.album.model.dto.RegisterResponseDTO;
 import com.adoo.album.model.entity.Usuario;
 import com.adoo.album.model.exceptions.UserAlreadyExistsException;
+import com.adoo.album.service.IAuthService;
+import com.adoo.album.service.IUsuarioService;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

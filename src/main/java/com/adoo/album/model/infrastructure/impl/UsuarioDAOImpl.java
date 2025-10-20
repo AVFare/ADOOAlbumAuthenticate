@@ -1,4 +1,4 @@
-package com.adoo.album.model.infrastructure;
+package com.adoo.album.model.infrastructure.impl;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.adoo.album.model.entity.Usuario;
+import com.adoo.album.model.infrastructure.IUsuarioDAO;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 

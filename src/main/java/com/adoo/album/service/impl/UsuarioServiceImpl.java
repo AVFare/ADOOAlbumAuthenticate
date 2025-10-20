@@ -1,9 +1,10 @@
-package com.adoo.album.service;
+package com.adoo.album.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.adoo.album.model.infrastructure.IUsuarioDAO;
+import com.adoo.album.service.IUsuarioService;
 import com.adoo.album.model.entity.Usuario;
 
 @Service

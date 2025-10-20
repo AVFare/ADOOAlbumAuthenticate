@@ -13,7 +13,4 @@ public class UsuarioController {
     public void setUsuarioService(IUsuarioService usuarioService) {
         this.usuarioService = usuarioService;
     }
-    
-    
-
 }
