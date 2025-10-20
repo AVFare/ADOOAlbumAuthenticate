@@ -1,0 +1,107 @@
+{
+  "_type": "Project",
+  "name": "Modulo_Reportes_UML",
+  "ownedElements": [
+    {
+      "_type": "UMLModel",
+      "name": "ReportesDeUsoYRareza",
+      "ownedElements": [
+        {
+          "_type": "UMLClass",
+          "name": "ReporteController",
+          "attributes": [],
+          "operations": [
+            {
+              "name": "generarReporte(tipo: String): ReporteDTO"
+            }
+          ]
+        },
+        {
+          "_type": "UMLClass",
+          "name": "ReporteFactory",
+          "attributes": [],
+          "operations": [
+            {
+              "name": "crearReporteStrategy(tipo: String): IReporteStrategy"
+            }
+          ]
+        },
+        {
+          "_type": "UMLInterface",
+          "name": "IReporteStrategy",
+          "operations": [
+            {
+              "name": "generarReporte(): ReporteDTO"
+            }
+          ]
+        },
+        {
+          "_type": "UMLClass",
+          "name": "ReporteUsoStrategy",
+          "superClasses": [
+            "IReporteStrategy"
+          ],
+          "operations": [
+            {
+              "name": "generarReporte(): ReporteDTO"
+            }
+          ]
+        },
+        {
+          "_type": "UMLClass",
+          "name": "ReporteRarezaStrategy",
+          "superClasses": [
+            "IReporteStrategy"
+          ],
+          "operations": [
+            {
+              "name": "generarReporte(): ReporteDTO"
+            }
+          ]
+        },
+        {
+          "_type": "UMLClass",
+          "name": "ReporteTopAlbumsStrategy",
+          "superClasses": [
+            "IReporteStrategy"
+          ],
+          "operations": [
+            {
+              "name": "generarReporte(): ReporteDTO"
+            }
+          ]
+        },
+        {
+          "_type": "UMLClass",
+          "name": "ReporteService",
+          "operations": [
+            {
+              "name": "obtenerTopAlbums()"
+            },
+            {
+              "name": "obtenerFiguritasRaras()"
+            },
+            {
+              "name": "obtenerUsoFiguritas()"
+            }
+          ]
+        },
+        {
+          "_type": "UMLClass",
+          "name": "ReporteDTO",
+          "attributes": [
+            {
+              "name": "titulo: String"
+            },
+            {
+              "name": "descripcion: String"
+            },
+            {
+              "name": "datos: List<Map<String, Object>>"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
