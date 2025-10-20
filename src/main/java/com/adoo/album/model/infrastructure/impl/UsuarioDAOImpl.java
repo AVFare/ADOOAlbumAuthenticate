@@ -56,14 +56,18 @@ public class UsuarioDAOImpl implements IUsuarioDAO {
 	}
 
 	private boolean checkPassword(String password, String passwordDB) {
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		String hashedPassword = passwordEncoder.encode(password);
-		System.out.println("Password: " + password);
-		System.out.println("hashedPassword: " + hashedPassword);
-		System.out.println("passwordDB: " + passwordDB);
-		boolean isPasswordMatch = passwordEncoder.matches(password, passwordDB);
+		//todo: encriptar todo en todos lados.
 		
-		return isPasswordMatch;
+		// BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		// String hashedPassword = passwordEncoder.encode(password);
+		// System.out.println("Password: " + password);
+		// System.out.println("hashedPassword: " + hashedPassword);
+		// System.out.println("passwordDB: " + passwordDB);
+		// boolean isPasswordMatch = passwordEncoder.matches(password, passwordDB);
+		
+		//return isPasswordMatch;
+
+		return password.equals(passwordDB);
 	}
 
 	@Override
