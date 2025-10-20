@@ -1,4 +1,4 @@
-package com.adoo.album.model.entity.exceptions;
+package com.adoo.album.model.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

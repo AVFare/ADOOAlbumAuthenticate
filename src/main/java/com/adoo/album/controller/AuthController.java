@@ -1,65 +1,34 @@
 package com.adoo.album.controller;
 
-import java.util.Date;
-
-import javax.crypto.SecretKey;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.adoo.album.model.entity.UsuarioDTO;
-import com.adoo.album.model.entity.exceptions.UserAlreadyExistsException;
+import com.adoo.album.model.entity.LoginRequestDTO;
+import com.adoo.album.model.entity.LoginResponseDTO;
+import com.adoo.album.model.entity.RegisterRequestDTO;
+import com.adoo.album.model.entity.RegisterResponseDTO;
 import com.adoo.album.service.IAuthService;
-import com.adoo.album.service.IUsuarioService;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-
-	private final int EXPIRATION_TIME_IN_MIN = 60;
 	
 	@Autowired
 	private IAuthService service;
 
-	@Autowired
-	private IUsuarioService usuarioService;
-
-	@Autowired
-	private SecretKey secretKey; // Inyecta la clave secreta
-
 	@PostMapping("/login")
-	public ResponseEntity<String> login(@RequestBody UsuarioDTO credentials) {
-		// Validar las credenciales aquí (puedes usar Spring Security u otros
-		// mecanismos)
-		if (usuarioService.findUser(credentials.getUsername(), credentials.getPassword()) != null) {
-			// Crear el token JWT
-			String token = Jwts.builder().setSubject(credentials.getUsername()).setIssuedAt(new Date())
-					.setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME_IN_MIN * 60 * 1000))
-					.signWith(secretKey, SignatureAlgorithm.HS256).compact();
-
-			return new ResponseEntity<>(token, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>("Credenciales inválidas.", HttpStatus.UNAUTHORIZED);
-		}
+	public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO credentials) {
+		return ResponseEntity.ok(service.login(credentials));
 	}
 
 	@PostMapping("/register")
-	public ResponseEntity<String> register(@RequestBody UsuarioDTO nuevoUsuario) {
-		if(usuarioService.findUser(nuevoUsuario.getUsername()) == null){
-
-			return new ResponseEntity<> ("Hola", HttpStatus.OK);
-		}
-		else {
-			throw new UserAlreadyExistsException(nuevoUsuario.getUsername());
-		}
+	public ResponseEntity<RegisterResponseDTO> register(@RequestBody RegisterRequestDTO nuevoUsuario) {
+		return ResponseEntity.ok(service.register(nuevoUsuario));
 	}
-	
+
 
 }

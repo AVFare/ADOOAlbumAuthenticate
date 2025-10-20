@@ -64,4 +64,13 @@ public class UsuarioDAOImpl implements IUsuarioDAO {
 		return isPasswordMatch;
 	}
 
+	@Override
+	@Transactional
+	public Usuario save(Usuario usuario) {
+		Session currentSession = entityManager.unwrap(Session.class);
+		currentSession.persist(usuario);
+		return usuario;
+	}
+
+
 }
