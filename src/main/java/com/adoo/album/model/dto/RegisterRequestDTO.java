@@ -1,4 +1,6 @@
-package com.adoo.album.model.entity;
+package com.adoo.album.model.dto;
+
+import com.adoo.album.model.entity.Role;
 
 import lombok.*;
 

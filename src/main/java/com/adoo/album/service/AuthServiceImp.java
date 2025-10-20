@@ -5,16 +5,13 @@ import java.util.Date;
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.adoo.album.model.entity.LoginRequestDTO;
-import com.adoo.album.model.entity.LoginResponseDTO;
-import com.adoo.album.model.entity.RegisterRequestDTO;
-import com.adoo.album.model.entity.RegisterResponseDTO;
+import com.adoo.album.model.dto.LoginRequestDTO;
+import com.adoo.album.model.dto.LoginResponseDTO;
+import com.adoo.album.model.dto.RegisterRequestDTO;
+import com.adoo.album.model.dto.RegisterResponseDTO;
 import com.adoo.album.model.entity.Usuario;
-import com.adoo.album.model.entity.UsuarioDTO;
 import com.adoo.album.model.exceptions.UserAlreadyExistsException;
 
 import io.jsonwebtoken.Jwts;

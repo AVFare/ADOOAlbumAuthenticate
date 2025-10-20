@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import com.adoo.album.model.infrastructure.IUsuarioDAO;
 import com.adoo.album.model.entity.Usuario;
-import com.adoo.album.model.entity.UsuarioDTO;
 
 @Service
 public class UsuarioServiceImpl implements IUsuarioService {

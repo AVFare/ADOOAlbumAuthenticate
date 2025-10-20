@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.adoo.album.model.entity.LoginRequestDTO;
-import com.adoo.album.model.entity.LoginResponseDTO;
-import com.adoo.album.model.entity.RegisterRequestDTO;
-import com.adoo.album.model.entity.RegisterResponseDTO;
+import com.adoo.album.model.dto.LoginRequestDTO;
+import com.adoo.album.model.dto.LoginResponseDTO;
+import com.adoo.album.model.dto.RegisterRequestDTO;
+import com.adoo.album.model.dto.RegisterResponseDTO;
 import com.adoo.album.service.IAuthService;
 
 @RestController
