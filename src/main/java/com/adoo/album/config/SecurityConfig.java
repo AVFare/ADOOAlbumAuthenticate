@@ -23,6 +23,8 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 	    http.csrf(csrf -> csrf.disable()) // útil si estás usando Postman
         .authorizeHttpRequests(authz -> authz
+            .requestMatchers("/api/notifications/**").permitAll() // Permitir endpoint de notificaciones
+            .requestMatchers("/api/test/**").permitAll() // Permitir endpoints de test
             //.requestMatchers("/api/clientes").permitAll()
             .anyRequest().authenticated())
         .addFilterBefore(jwtAuth(), UsernamePasswordAuthenticationFilter.class);
