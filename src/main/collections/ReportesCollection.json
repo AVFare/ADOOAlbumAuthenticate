@@ -1,0 +1,40 @@
+{
+  "info": {
+    "_postman_id": "e4b2a6d5-3c11-4c6b-89f8-9327b5c9bfa1",
+    "name": "Reportes Marketplace",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "marketplace-reportes"
+  },
+  "item": [
+    {
+      "name": "Obtener Top Álbumes",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/reports/top-albums",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["reports", "top-albums"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Obtener Figuritas Raras",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/reports/rare-stickers",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["reports", "rare-stickers"]
+        }
+      },
+      "response": []
+    }
+  ]
+}

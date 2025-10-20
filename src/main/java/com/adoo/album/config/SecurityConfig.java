@@ -24,6 +24,7 @@ public class SecurityConfig {
 	    http.csrf(csrf -> csrf.disable()) // útil si estás usando Postman
         .authorizeHttpRequests(authz -> authz
             //.requestMatchers("/api/clientes").permitAll()
+			.requestMatchers("/reports/**").permitAll()
             .anyRequest().authenticated())
         .addFilterBefore(jwtAuth(), UsernamePasswordAuthenticationFilter.class);
     return http.build();
