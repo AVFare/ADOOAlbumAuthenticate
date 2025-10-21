@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.adoo.album.model.dto.LoginRequestDTO;
@@ -13,7 +14,10 @@ import com.adoo.album.model.dto.LoginResponseDTO;
 import com.adoo.album.model.dto.RegisterRequestDTO;
 import com.adoo.album.model.dto.RegisterResponseDTO;
 import com.adoo.album.model.entity.Usuario;
+import com.adoo.album.model.exceptions.EmailAlreadyExistsException;
+import com.adoo.album.model.exceptions.InvalidCredentialsException;
 import com.adoo.album.model.exceptions.UserAlreadyExistsException;
+import com.adoo.album.model.exceptions.UserNotFoundException;
 import com.adoo.album.service.IAuthService;
 import com.adoo.album.service.IUsuarioService;
 
@@ -28,6 +32,8 @@ public class AuthServiceImp implements IAuthService {
     @Autowired
     private SecretKey secretKey;
     private final int EXPIRATION_TIME_IN_MIN = 60;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     
     @Override
     public RegisterResponseDTO register(RegisterRequestDTO request) {
@@ -35,6 +41,10 @@ public class AuthServiceImp implements IAuthService {
             throw new UserAlreadyExistsException(request.getUsername());
         }
 
+        if (usuarioService.findByEmail(request.getEmail()) != null) {
+            throw new EmailAlreadyExistsException(request.getEmail());
+        }
+        
         Usuario nuevoUsuario = new Usuario();
         nuevoUsuario.setUsername(request.getUsername());
         nuevoUsuario.setPassword(request.getPassword());
@@ -64,28 +74,27 @@ public class AuthServiceImp implements IAuthService {
 
     @Override
     public LoginResponseDTO login(LoginRequestDTO credentials) {
-        Usuario usuario = usuarioService.findUser(credentials.getUsername(), credentials.getPassword());
+        Usuario usuario = usuarioService.findUser(credentials.getUsername());
 
         if (usuario == null) {
-            throw new RuntimeException("Credenciales inválidas");
+            throw new UserNotFoundException(credentials.getUsername());
         }
 
-        // Generar token
+        if (!passwordEncoder.matches(credentials.getPassword(), usuario.getPassword())) {
+            throw new InvalidCredentialsException();
+        }
+
         String token = Jwts.builder()
-                .setSubject(credentials.getUsername())
+                .setSubject(usuario.getUsername())
+                .claim("userId", usuario.getId())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME_IN_MIN * 60 * 1000))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
 
-        // Devolver DTO de respuesta
         return LoginResponseDTO.builder()
                 .accessToken(token)
                 .role(usuario.getRole())
                 .build();
     }
-
-
-
-
 }

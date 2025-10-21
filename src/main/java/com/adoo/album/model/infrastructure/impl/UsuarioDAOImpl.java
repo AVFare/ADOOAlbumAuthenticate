@@ -71,5 +71,15 @@ public class UsuarioDAOImpl implements IUsuarioDAO {
         currentSession.persist(usuario);
         return usuario;
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Usuario findByEmail(String email) {
+        Session currentSession = entityManager.unwrap(Session.class);
+        Query<Usuario> theQuery = currentSession.createQuery("FROM Usuario WHERE email = :email", Usuario.class);
+        theQuery.setParameter("email", email);
+        return theQuery.uniqueResult();
+    }
+
 }
 

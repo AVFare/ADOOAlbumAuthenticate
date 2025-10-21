@@ -6,6 +6,7 @@ import javax.crypto.SecretKey;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -23,18 +24,23 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-	    http.csrf(csrf -> csrf.disable()) // útil si estás usando Postman
-        .authorizeHttpRequests(authz -> authz
-            //.requestMatchers("/api/clientes").permitAll()
-            .anyRequest().authenticated())
-        .addFilterBefore(jwtAuth(), UsernamePasswordAuthenticationFilter.class);
-    return http.build();
+		http.csrf(csrf -> csrf.disable())
+			.authorizeHttpRequests(authz -> authz
+				.requestMatchers("/auth/register", "/auth/login").permitAll()  
+				.requestMatchers(HttpMethod.GET, "/api/usuarios/**").permitAll() 
+				.anyRequest().authenticated() 
+			)
+			.addFilterBefore(jwtAuth(), UsernamePasswordAuthenticationFilter.class);
+
+		return http.build();
 	}
 
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer() {
-		return (web) -> web.ignoring().requestMatchers("auth/register", "auth/login", "/api/usuarios/*");
+		return (web) -> web.ignoring()
+			.requestMatchers("auth/register", "auth/login");
 	}
+
 
 	@Bean
 	public JwtAuthFilter jwtAuth() {

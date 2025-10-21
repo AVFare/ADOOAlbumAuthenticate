@@ -9,6 +9,6 @@ public interface IUsuarioDAO {
     Usuario findUser(String username);
     Usuario save(Usuario usuario);
     Optional<Usuario> findById(Long id);
-	
+    Usuario findByEmail(String email);
 }
 

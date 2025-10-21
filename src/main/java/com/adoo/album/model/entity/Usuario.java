@@ -2,6 +2,7 @@ package com.adoo.album.model.entity;
 
 import java.sql.Date;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -26,6 +27,7 @@ public class Usuario {
 	private String password;
 	@Enumerated(EnumType.STRING)
 	private Role role;
+	@Column(name = "email", unique = true)
 	private String email;
 	private int telefono;
 	private String nombre;
