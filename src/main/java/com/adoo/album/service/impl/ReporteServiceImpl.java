@@ -1,11 +1,16 @@
 package com.adoo.album.service.impl;
 
+import com.adoo.album.model.entity.Pack;
 import com.adoo.album.model.entity.Sticker;
 import com.adoo.album.model.entity.dto.ReporteDTO;
 import com.adoo.album.repository.AlbumRepository;
+import com.adoo.album.repository.PackRepository;
 import com.adoo.album.repository.StickerRepository;
+import com.adoo.album.repository.UserRepository;
+import com.adoo.album.repository.UserRewardRepository;
 import com.adoo.album.service.IReporteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -19,33 +24,56 @@ public class ReporteServiceImpl implements IReporteService {
     @Autowired
     private StickerRepository stickerRepository;
 
+    @Autowired
+    private UserRewardRepository userRewardRepository;
+
+    @Autowired
+    private PackRepository packRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public ReporteDTO generarReporte(String tipoReporte) {
         return switch (tipoReporte) {
             case "TOP_ALBUMS" -> generarTopAlbumsCompletitud();
             case "RARE_STICKERS" -> generarFiguritasMasRaras();
             case "USER_STATS" -> generarEstadisticasUsuarios();
-            // Implementación futura: case "PACK_OPEN_RATE" -> generarTasaAperturaPaquetes();
+            case "PACK_OPEN_RATE" -> generarTasaAperturaPaquetes();
             default -> new ReporteDTO(tipoReporte, "Tipo de reporte no reconocido", Collections.emptyList());
         };
     }
 
     // Lógica para el reporte: Top Álbumes por Completitud
     private ReporteDTO generarTopAlbumsCompletitud() {
-        // En una implementación real, usarías una consulta JPA o nativa
-        // (Ej: Group By AlbumId, Count(distinct UserId) where estado = 'Reclamado')
         
-        // Simulación de datos para demostración
-        List<Map<String, Object>> resultadosSimulados = List.of(
-            Map.of("album_id", 101L, "titulo", "Mundos Fantásticos Vol. 1", "completados", 54),
-            Map.of("album_id", 105L, "titulo", "Leyendas del Deporte 2024", "completados", 48),
-            Map.of("album_id", 103L, "titulo", "Viaje al Espacio", "completados", 35)
-        );
+        // 1. Ejecutar la consulta personalizada del repositorio.
+        // El método devuelve List<Object[]> donde cada array es: [titulo_album (String), conteo (Long)]
+        List<Object[]> resultadosRaw = userRewardRepository.countCompletedAlbumsByAlbum();
+        
+        // 2. Mapear los resultados crudos (Object[]) al formato List<Map<String, Object>>
+        List<Map<String, Object>> resultadosMapeados = resultadosRaw.stream()
+            .map(row -> {
+                // Usamos HashMap para evitar problemas de casting/invalidez de Map.of en streams
+                java.util.HashMap<String, Object> albumMap = new java.util.HashMap<>();
+                
+                // Los índices corresponden al orden del SELECT en la query:
+                // SELECT ur.album.titulo (Index 0), COUNT(ur.id) (Index 1)
+                albumMap.put("titulo", row[0]); 
+                albumMap.put("completados", row[1]); 
+                
+                // Nota: El album_id no está disponible en la consulta actual.
+                // Si necesitas el ID, modifica la consulta en UserRewardRepository a:
+                // SELECT ur.album.id, ur.album.titulo, COUNT(ur.id) ...
+                
+                return (Map<String, Object>) albumMap;
+            })
+            .collect(Collectors.toList());
 
         return new ReporteDTO(
             "TOP_ALBUMS",
             "Clasificación de álbumes según la cantidad de usuarios que han reclamado su premio (álbum completo).",
-            resultadosSimulados
+            resultadosMapeados
         );
     }
 
@@ -78,43 +106,81 @@ public class ReporteServiceImpl implements IReporteService {
             resultados
         );
     }
-    /**
-     * Reporte que devuelve estadísticas básicas de la base de usuarios.
-     * En un entorno real, el IUsuarioService necesitaría un método como findAll()
-     * o countAll().
-     */
+
+    // Reporte que devuelve estadísticas básicas de la base de usuarios.
     private ReporteDTO generarEstadisticasUsuarios() {
+    
+    // 1. Obtener el total de usuarios registrados
+    long totalUsers = userRepository.count();
+
+    // 2. Obtener la distribución de usuarios por rol (consulta GROUP BY)
+    List<Object[]> rolesRaw = userRepository.countUsersByRole();
+
+    // 3. Mapear los resultados de roles a List<Map<String, Object>>
+    List<Map<String, Object>> distribucionRoles = rolesRaw.stream()
+        .map(row -> {
+            java.util.HashMap<String, Object> roleMap = new java.util.HashMap<>();
+            // row[0] es el Role (Enum), row[1] es el COUNT(Long)
+            roleMap.put("rol", row[0].toString());
+            roleMap.put("cantidad", row[1]);
+            return roleMap;
+        })
+        .collect(java.util.stream.Collectors.toList());
+
+    // 4. Estructurar el ReporteDTO final
+
+    // Incluimos el total de usuarios como la primera métrica
+    List<Map<String, Object>> resultados = new java.util.ArrayList<>();
+    resultados.add(Map.of("metricas", "Total de Usuarios Registrados", "valor", totalUsers));
+    
+    // Y la distribución de roles como una métrica detallada
+    resultados.add(Map.of("metricas", "Distribución por Rol", "valor", distribucionRoles));
+
+    return new ReporteDTO(
+        "USER_STATS",
+        "Estadísticas generales sobre la base de usuarios (conteo total y distribución de roles).",
+        resultados
+    );
+    }
+    
+    // Reporte: Tasa promedio de apertura de paquetes por usuario comprador
+    private ReporteDTO generarTasaAperturaPaquetes() {
         
-        // Simulación: Asumimos que el IUsuarioService tiene un método para contar
-        // o que se usa directamente un repositorio para obtener los datos
+        // 1. Total de paquetes comprados (numerador)
+        long totalPacksComprados = packRepository.count();
+
+        // 2. Número de usuarios que han comprado AL MENOS un paquete (denominador)
+        // Se asume que PackRepository tendrá un método para contar usuarios distintos
+        // Si no lo tienes, puedes usar una consulta @Query
         
-        // Simulación de contar usuarios totales
-        long totalUsers;
+        // Simulación de la obtención de compradores únicos:
+        long totalCompradoresUnicos;
+        
         try {
-            // Asumimos que IUsuarioService tiene un método para contar
-            // En realidad, tu IUsuarioDAO debería tener un .count() o .findAll()
-            // Vamos a simular el conteo
-            totalUsers = 1250; 
+            // Requiere un método personalizado en PackRepository
+            totalCompradoresUnicos = packRepository.countDistinctUserIds(); 
         } catch (Exception e) {
-            totalUsers = 0;
+            // Fallback si la consulta falla o si se usa el total de usuarios (menos preciso)
+            totalCompradoresUnicos = userRepository.count(); 
         }
 
-        // Simulación de la obtención de la distribución de roles
-        // En una implementación real, sería una consulta GROUP BY (ej. en el DAO)
-        List<Map<String, Object>> distribucionRoles = List.of(
-            Map.of("rol", "USER", "cantidad", 1245L),
-            Map.of("rol", "ADMIN", "cantidad", 5L)
-        );
+
+        double tasaApertura = 0.0;
+
+        if (totalCompradoresUnicos > 0) {
+            // Tasa = Paquetes Totales / Compradores Únicos
+            tasaApertura = (double) totalPacksComprados / totalCompradoresUnicos;
+        }
 
         List<Map<String, Object>> resultados = List.of(
-            Map.of("metricas", "Total de Usuarios Registrados", "valor", totalUsers),
-            Map.of("metricas", "Distribución por Rol", "valor", distribucionRoles)
+            Map.of("Metrica", "Total de Paquetes Comprados", "Valor", totalPacksComprados),
+            Map.of("Metrica", "Total de Usuarios Compradores Únicos", "Valor", totalCompradoresUnicos),
+            Map.of("Metrica", "Tasa Promedio de Apertura (Paquetes/Comprador)", "Valor", String.format("%.2f", tasaApertura))
         );
 
-
         return new ReporteDTO(
-            "USER_STATS",
-            "Estadísticas generales sobre la base de usuarios (conteo total y distribución de roles).",
+            "PACK_OPEN_RATE",
+            "Tasa promedio de paquetes comprados por cada usuario comprador.",
             resultados
         );
     }

@@ -8,11 +8,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PackRepository extends JpaRepository<Pack, Long> {
 
-    // RF10 (Reporte de Uso): Tasa de Apertura de Paquetes
-    // Obtener el total de paquetes comprados por un usuario
-    long countByUserId(Long userId);
-
-    // Obtener el total de paquetes comprados en total
-    // El método count() de JpaRepository ya hace esto, pero aquí lo especificamos:
-    // long count();
+    // Método para obtener el total de usuarios distintos que han comprado un paquete.
+    // Esto es el denominador para la Tasa de Apertura.
+    @Query("SELECT COUNT(DISTINCT p.user.id) FROM Pack p")
+    long countDistinctUserIds();
+    
+    // (Otros métodos existentes)
 }
