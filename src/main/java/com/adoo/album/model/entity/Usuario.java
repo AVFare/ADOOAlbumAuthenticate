@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
+@Builder
+@AllArgsConstructor
 @Entity
 @NoArgsConstructor // Lombok generates the default constructor
 @Table(name = "user", uniqueConstraints = {

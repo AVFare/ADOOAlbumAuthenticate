@@ -6,9 +6,12 @@ import javax.crypto.SecretKey;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -21,23 +24,33 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-	    http.csrf(csrf -> csrf.disable()) // útil si estás usando Postman
-        .authorizeHttpRequests(authz -> authz
-            //.requestMatchers("/api/clientes").permitAll()
-			.requestMatchers("/reports/**").permitAll()
-            .anyRequest().authenticated())
-        .addFilterBefore(jwtAuth(), UsernamePasswordAuthenticationFilter.class);
-    return http.build();
+		http.csrf(csrf -> csrf.disable())
+			.authorizeHttpRequests(authz -> authz
+				.requestMatchers("/auth/register", "/auth/login").permitAll()  
+				.requestMatchers(HttpMethod.GET, "/api/usuarios/**").permitAll() 
+				.requestMatchers("/reports/**").permitAll()
+				.anyRequest().authenticated() 
+			)
+			.addFilterBefore(jwtAuth(), UsernamePasswordAuthenticationFilter.class);
+
+		return http.build();
 	}
 
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer() {
-		return (web) -> web.ignoring().requestMatchers("auth/register", "auth/login");
+		return (web) -> web.ignoring()
+			.requestMatchers("auth/register", "auth/login");
 	}
+
 
 	@Bean
 	public JwtAuthFilter jwtAuth() {
 		return new JwtAuthFilter(secretKey());
+	}
+
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
 	}
 
 	@Bean
