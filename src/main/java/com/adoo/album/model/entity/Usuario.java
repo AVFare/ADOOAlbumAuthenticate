@@ -1,49 +1,71 @@
 package com.adoo.album.model.entity;
 
-import java.sql.Date;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
 @AllArgsConstructor
 @Entity
-@Table(name = "usuarios")
-public class Usuario {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	private String username;
-	private String password;
-	@Enumerated(EnumType.STRING)
-	private Role role;
-	@Column(name = "email", unique = true)
-	private String email;
-	private int telefono;
-	private String nombre;
-	private String apellido;
-	private String avatar_url;
-	private Date created_at;
+@NoArgsConstructor // Lombok generates the default constructor
+@Table(name = "user", uniqueConstraints = {
+    @UniqueConstraint(columnNames = "username"),
+    @UniqueConstraint(columnNames = "email")
+})
+public class Usuario { // Renamed from User to Usuario, as per your code
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	public Usuario() {
-		super();
-	}
+    // RF9: Username Inmutable
+    @Column(nullable = false, unique = true, length = 50)
+    private String username;
 
-	public Usuario(String username, String password, Role role) {
-		this.username = username;
-		this.password = password;
-		this.role = role;
-	}
-	
+    // Regla de Negocio: Se recomienda almacenar el hash, no el texto plano.
+    // Usamos 'hash_password' para ser explícitos.
+    @Column(name = "password", nullable = false, length = 100)
+    private String password; 
+
+    // RF9: Perfil - Campos adicionales
+    @Column(length = 100)
+    private String nombre;
+
+    @Column(length = 100)
+    private String apellido;
+
+    @Column(length = 20)
+    private int telefono;
+
+    // RF9: Perfil - URL para la foto
+    @Column(name = "avatar_url", length = 255)
+    private String Avatar_url;
+
+    // RF1: Roles y Autenticación
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 10)
+    private Role role; // ADMIN, USER
+
+    // RF9: Email y validación única
+    @Column(nullable = false, unique = true, length = 100)
+    private String email;
+    
+    // RF10: Auditoría - Campo de creación
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Date created_at = new Date(System.currentTimeMillis());
+
+    // Constructor customizado (sin Lombok, ya que @Data genera getters/setters)
+    // Usamos el password en lugar de hashPassword.
+    public Usuario(String username, String password, String email, Role role) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+    }
 }
