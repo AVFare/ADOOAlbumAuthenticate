@@ -9,9 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Controller de prueba para simular cómo otros módulos usarían el sistema de notificaciones
- */
 @RestController
 @RequestMapping("/api/test")
 @CrossOrigin(origins = "*")
@@ -20,14 +17,8 @@ public class TestIntegrationController {
     @Autowired
     private IObservable notificationSubject;
     
-    /**
-     * Simula una compra de paquetes
-     */
     @PostMapping("/compra-paquete")
     public ResponseEntity<Map<String, Object>> simularCompraPaquete(@RequestParam Long userId, @RequestParam int cantidad) {
-        // Simular lógica de compra...
-        
-        // Notificar al sistema de auditoría
         notificationSubject.notifyObservers(
             new NotificationRequest(userId, "COMPRA_PAQUETE", "Usuario compró " + cantidad + " paquetes")
         );
@@ -38,14 +29,8 @@ public class TestIntegrationController {
         return ResponseEntity.ok(response);
     }
     
-    /**
-     * Simula completar un álbum
-     */
     @PostMapping("/album-completado")
     public ResponseEntity<Map<String, Object>> simularAlbumCompletado(@RequestParam Long userId) {
-        // Simular lógica de completar álbum...
-        
-        // Notificar al sistema de auditoría
         notificationSubject.notifyObservers(
             new NotificationRequest(userId, "ALBUM_COMPLETADO", "Usuario completó su álbum!")
         );
@@ -56,16 +41,10 @@ public class TestIntegrationController {
         return ResponseEntity.ok(response);
     }
     
-    /**
-     * Simula un intercambio aceptado
-     */
     @PostMapping("/intercambio")
     public ResponseEntity<Map<String, Object>> simularIntercambio(
             @RequestParam Long userId1, 
             @RequestParam Long userId2) {
-        // Simular lógica de intercambio...
-        
-        // Notificar al sistema de auditoría para ambos usuarios
         notificationSubject.notifyObservers(
             new NotificationRequest(userId1, "INTERCAMBIO_ACEPTADO", "Intercambio con usuario " + userId2)
         );
@@ -80,3 +59,4 @@ public class TestIntegrationController {
         return ResponseEntity.ok(response);
     }
 }
+
