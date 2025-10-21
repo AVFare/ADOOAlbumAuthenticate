@@ -10,5 +10,6 @@ public interface IUsuarioService {
 
     Usuario actualizarUsuario(Long id, UsuarioUpdateRequestDTO dto);
     Usuario obtenerUsuarioPorId(Long id);
+    Usuario findByEmail(String email);
 }
 

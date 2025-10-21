@@ -14,6 +14,7 @@ import com.adoo.album.model.dto.LoginResponseDTO;
 import com.adoo.album.model.dto.RegisterRequestDTO;
 import com.adoo.album.model.dto.RegisterResponseDTO;
 import com.adoo.album.model.entity.Usuario;
+import com.adoo.album.model.exceptions.EmailAlreadyExistsException;
 import com.adoo.album.model.exceptions.InvalidCredentialsException;
 import com.adoo.album.model.exceptions.UserAlreadyExistsException;
 import com.adoo.album.model.exceptions.UserNotFoundException;
@@ -40,6 +41,10 @@ public class AuthServiceImp implements IAuthService {
             throw new UserAlreadyExistsException(request.getUsername());
         }
 
+        if (usuarioService.findByEmail(request.getEmail()) != null) {
+            throw new EmailAlreadyExistsException(request.getEmail());
+        }
+        
         Usuario nuevoUsuario = new Usuario();
         nuevoUsuario.setUsername(request.getUsername());
         nuevoUsuario.setPassword(request.getPassword());

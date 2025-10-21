@@ -12,6 +12,7 @@ import com.adoo.album.model.infrastructure.IUsuarioDAO;
 import com.adoo.album.service.IUsuarioService;
 import com.adoo.album.model.dto.UsuarioUpdateRequestDTO;
 import com.adoo.album.model.entity.Usuario;
+import com.adoo.album.model.exceptions.EmailAlreadyExistsException;
 import com.adoo.album.model.exceptions.UserNotFoundException;
 
 @Service
@@ -33,6 +34,11 @@ public class UsuarioServiceImpl implements IUsuarioService {
     }
 
     @Override
+    public Usuario findByEmail(String email) {
+        return usuarioDAO.findByEmail(email);
+    }
+
+    @Override
     public Usuario registerUser(Usuario usuario) {
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         return usuarioDAO.save(usuario);
@@ -49,7 +55,14 @@ public class UsuarioServiceImpl implements IUsuarioService {
         Usuario usuario = usuarioDAO.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
 
-        if (dto.getEmail() != null) usuario.setEmail(dto.getEmail());
+        if (dto.getEmail() != null && !dto.getEmail().equals(usuario.getEmail())) {
+            Usuario other = usuarioDAO.findByEmail(dto.getEmail());
+            if (other != null && !other.getId().equals(id)) {
+                throw new EmailAlreadyExistsException(dto.getEmail());
+            }
+            usuario.setEmail(dto.getEmail());
+        }
+        
         if (dto.getTelefono() != null) usuario.setTelefono(dto.getTelefono());
         if (dto.getNombre() != null) usuario.setNombre(dto.getNombre());
         if (dto.getApellido() != null) usuario.setApellido(dto.getApellido());
