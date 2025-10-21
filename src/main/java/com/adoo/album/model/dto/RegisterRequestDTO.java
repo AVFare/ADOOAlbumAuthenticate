@@ -1,5 +1,7 @@
 package com.adoo.album.model.dto;
 
+import java.sql.Date;
+
 import com.adoo.album.model.entity.Role;
 
 import lombok.*;
@@ -12,4 +14,10 @@ public class RegisterRequestDTO {
     private String username;
     private String password;
     private Role role;
+    private String email;
+	private int telefono;
+	private String nombre;
+	private String apellido;
+	private String avatar_url;
+	private Date created_at;
 }

@@ -1,9 +1,14 @@
 package com.adoo.album.model.infrastructure;
 
+import java.util.Optional;
+
 import com.adoo.album.model.entity.Usuario;
 
 public interface IUsuarioDAO {
-	public Usuario findUser(String username, String password);
-	public Usuario findUser(String username);
-	public Usuario save(Usuario usuario);
+    Usuario findUser(String username, String password);
+    Usuario findUser(String username);
+    Usuario save(Usuario usuario);
+    Optional<Usuario> findById(Long id);
+	
 }
+

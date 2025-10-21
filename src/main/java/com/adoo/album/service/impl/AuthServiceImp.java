@@ -1,5 +1,6 @@
 package com.adoo.album.service.impl;
 
+//import java.sql.Date;
 import java.util.Date;
 
 import javax.crypto.SecretKey;
@@ -34,11 +35,16 @@ public class AuthServiceImp implements IAuthService {
             throw new UserAlreadyExistsException(request.getUsername());
         }
 
-        Usuario nuevoUsuario = new Usuario(
-            request.getUsername(),
-            request.getPassword(), 
-            request.getRole()
-        );
+        Usuario nuevoUsuario = new Usuario();
+        nuevoUsuario.setUsername(request.getUsername());
+        nuevoUsuario.setPassword(request.getPassword());
+        nuevoUsuario.setRole(request.getRole());
+        nuevoUsuario.setEmail(request.getEmail());
+        nuevoUsuario.setTelefono(request.getTelefono());
+        nuevoUsuario.setNombre(request.getNombre());
+        nuevoUsuario.setApellido(request.getApellido());
+        nuevoUsuario.setAvatar_url(request.getAvatar_url());
+        nuevoUsuario.setCreated_at(new java.sql.Date(System.currentTimeMillis()));
 
         usuarioService.registerUser(nuevoUsuario);
 
