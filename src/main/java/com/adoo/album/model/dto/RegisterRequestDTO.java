@@ -15,7 +15,6 @@ public class RegisterRequestDTO {
     private String password;
     private String email;
     private Role role;
-    private String email;
 	private int telefono;
 	private String nombre;
 	private String apellido;

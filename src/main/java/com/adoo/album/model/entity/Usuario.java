@@ -1,8 +1,12 @@
 package com.adoo.album.model.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.sql.Date;
 import java.time.LocalDateTime;
 
 @Data
@@ -37,11 +41,11 @@ public class Usuario { // Renamed from User to Usuario, as per your code
     private String apellido;
 
     @Column(length = 20)
-    private String telefono;
+    private int telefono;
 
     // RF9: Perfil - URL para la foto
     @Column(name = "avatar_url", length = 255)
-    private String avatarUrl;
+    private String Avatar_url;
 
     // RF1: Roles y Autenticación
     @Enumerated(EnumType.STRING)
@@ -54,7 +58,7 @@ public class Usuario { // Renamed from User to Usuario, as per your code
     
     // RF10: Auditoría - Campo de creación
     @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private Date created_at = new Date(System.currentTimeMillis());
 
     // Constructor customizado (sin Lombok, ya que @Data genera getters/setters)
     // Usamos el password en lugar de hashPassword.
