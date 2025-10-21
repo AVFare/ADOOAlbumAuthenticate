@@ -4,7 +4,9 @@ import java.util.Optional;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,8 @@ public class UsuarioDAOImpl implements IUsuarioDAO {
 
     @PersistenceContext
     private EntityManager entityManager;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional(readOnly = true)
@@ -56,8 +60,8 @@ public class UsuarioDAOImpl implements IUsuarioDAO {
 		return Optional.ofNullable(u);
 	}
 
-    private boolean checkPassword(String password, String passwordDB) {
-        return password.equals(passwordDB);
+    private boolean checkPassword(String rawPassword, String hashedPassword) {
+        return passwordEncoder.matches(rawPassword, hashedPassword);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.adoo.album.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.adoo.album.model.infrastructure.IUsuarioDAO;
@@ -13,6 +14,8 @@ public class UsuarioServiceImpl implements IUsuarioService {
 
     @Autowired
     private IUsuarioDAO usuarioDAO;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public Usuario findUser(String username, String password) {
@@ -26,6 +29,7 @@ public class UsuarioServiceImpl implements IUsuarioService {
 
     @Override
     public Usuario registerUser(Usuario usuario) {
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         return usuarioDAO.save(usuario);
     }
 
