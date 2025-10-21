@@ -1,13 +1,18 @@
 package com.adoo.album.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.AccessDeniedException;
 
 import com.adoo.album.model.infrastructure.IUsuarioDAO;
 import com.adoo.album.service.IUsuarioService;
 import com.adoo.album.model.dto.UsuarioUpdateRequestDTO;
 import com.adoo.album.model.entity.Usuario;
+import com.adoo.album.model.exceptions.UserNotFoundException;
 
 @Service
 public class UsuarioServiceImpl implements IUsuarioService {
@@ -42,15 +47,16 @@ public class UsuarioServiceImpl implements IUsuarioService {
     @Override
     public Usuario actualizarUsuario(Long id, UsuarioUpdateRequestDTO dto) {
         Usuario usuario = usuarioDAO.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new UserNotFoundException(id));
 
-        usuario.setEmail(dto.getEmail());
-        usuario.setTelefono(dto.getTelefono());
-        usuario.setNombre(dto.getNombre());
-        usuario.setApellido(dto.getApellido());
-        usuario.setAvatar_url(dto.getAvatar_url());
+        if (dto.getEmail() != null) usuario.setEmail(dto.getEmail());
+        if (dto.getTelefono() != null) usuario.setTelefono(dto.getTelefono());
+        if (dto.getNombre() != null) usuario.setNombre(dto.getNombre());
+        if (dto.getApellido() != null) usuario.setApellido(dto.getApellido());
+        if (dto.getAvatar_url() != null) usuario.setAvatar_url(dto.getAvatar_url());
 
         return usuarioDAO.save(usuario);
     }
+
 }
 

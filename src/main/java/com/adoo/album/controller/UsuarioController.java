@@ -1,7 +1,9 @@
 package com.adoo.album.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -24,29 +26,46 @@ public class UsuarioController {
     @Autowired
     private IUsuarioService usuarioService;
 
-    @PutMapping("/{id}")
-    public ResponseEntity<UsuarioProfileResponseDTO> actualizarUsuario(
-            @PathVariable Long id,
-            @RequestBody UsuarioUpdateRequestDTO request) {
+@PutMapping("/{id}")
+public ResponseEntity<UsuarioProfileResponseDTO> actualizarUsuario(
+        @PathVariable Long id,
+        @RequestBody UsuarioUpdateRequestDTO request) {
 
-        Usuario actualizado = usuarioService.actualizarUsuario(id, request);
-
-        UsuarioProfileResponseDTO response = UsuarioProfileResponseDTO.builder()
-                .id(actualizado.getId())
-                .username(actualizado.getUsername())
-                .email(actualizado.getEmail())
-                .telefono(actualizado.getTelefono())
-                .nombre(actualizado.getNombre())
-                .apellido(actualizado.getApellido())
-                .avatar_url(actualizado.getAvatar_url())
-                .created_at(actualizado.getCreated_at())
-                .build();
-
-        return ResponseEntity.ok(response);
+    // Obtener usuario logueado desde el token
+    var auth = SecurityContextHolder.getContext().getAuthentication();
+    if (auth == null || auth.getPrincipal() == null) {
+        throw new RuntimeException("Usuario no autenticado");
     }
+
+    String username = auth.getPrincipal().toString();
+    Usuario loggedUser = usuarioService.findUser(username);
+
+    // Validar que el usuario solo pueda modificar su propio perfil
+    if (!loggedUser.getId().equals(id)) {
+        throw new RuntimeException("No autorizado para modificar este perfil");
+    }
+
+    // Actualizar
+    Usuario actualizado = usuarioService.actualizarUsuario(id, request);
+
+    UsuarioProfileResponseDTO response = UsuarioProfileResponseDTO.builder()
+            .id(actualizado.getId())
+            .username(actualizado.getUsername())
+            .email(actualizado.getEmail())
+            .telefono(actualizado.getTelefono())
+            .nombre(actualizado.getNombre())
+            .apellido(actualizado.getApellido())
+            .avatar_url(actualizado.getAvatar_url())
+            .created_at(actualizado.getCreated_at())
+            .build();
+
+    return ResponseEntity.ok(response);
+}
+
 
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioProfileResponseDTO> obtenerPerfil(@PathVariable Long id) {
+        // GET sigue siendo público
         Usuario usuario = usuarioService.obtenerUsuarioPorId(id);
 
         UsuarioProfileResponseDTO response = UsuarioProfileResponseDTO.builder()
@@ -63,4 +82,3 @@ public class UsuarioController {
         return ResponseEntity.ok(response);
     }
 }
-

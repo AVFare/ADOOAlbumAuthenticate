@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class UsuarioUpdateRequestDTO {
     private String email;
-    private int telefono;
+    private Integer telefono;
     private String nombre;
     private String apellido;
     private String avatar_url;
