@@ -35,9 +35,10 @@ public class AuthServiceImp implements IAuthService {
         }
 
         Usuario nuevoUsuario = new Usuario(
-            request.getUsername(),
-            request.getPassword(), 
-            request.getRole()
+                request.getUsername(),
+                request.getPassword(),
+                request.getEmail(),
+                request.getRole()
         );
 
         usuarioService.registerUser(nuevoUsuario);
