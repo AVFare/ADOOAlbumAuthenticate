@@ -1,12 +1,16 @@
 package com.adoo.album.config;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import javax.crypto.SecretKey;
 
+import com.adoo.album.security.AuthUser;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -50,14 +54,33 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 				}
 
 				String username = claims.getSubject();
+
+				Object rolesClaim = claims.get("role");
+				List<SimpleGrantedAuthority> authorities;
+
+				if (rolesClaim instanceof String r) {
+					authorities = List.of(new SimpleGrantedAuthority(r.startsWith("ROLE_") ? r : "ROLE_" + r));
+				} else if (rolesClaim instanceof Collection<?> coll) {
+					authorities = coll.stream()
+							.filter(Objects::nonNull)
+							.map(Object::toString)
+							.map(r -> r.startsWith("ROLE_") ? r : "ROLE_" + r)
+							.map(SimpleGrantedAuthority::new)
+							.toList();
+				} else {
+					authorities = List.of();
+				}
+				Long userId = null;
+				Object userIdObject = claims.get("userId");
+				if(userIdObject instanceof Number n) {userId = n.longValue();}
+
+				System.out.println("JWT user=" + username + " authorities=" + authorities + " userId=" + userId);
 				if (username != null) {
-					// Ponemos username como principal, no userId
+					AuthUser principal = new AuthUser(userId, username);
+
 					UsernamePasswordAuthenticationToken authentication =
-						new UsernamePasswordAuthenticationToken(
-									username,
-									null,
-									List.of(new SimpleGrantedAuthority("USER"))
-							);
+							new UsernamePasswordAuthenticationToken(principal, null, authorities);
+
 					authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
 					SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -79,4 +102,5 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 		}
 		return null;
 	}
+
 }

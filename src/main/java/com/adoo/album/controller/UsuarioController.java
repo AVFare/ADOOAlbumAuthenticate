@@ -1,8 +1,10 @@
 package com.adoo.album.controller;
 
+import com.adoo.album.config.JwtAuthFilter;
+import com.adoo.album.security.AuthUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.adoo.album.model.dto.UsuarioProfileResponseDTO;
 import com.adoo.album.model.dto.UsuarioUpdateRequestDTO;
 import com.adoo.album.model.entity.Usuario;
-import com.adoo.album.service.IUsuarioService;
+import com.adoo.album.service.api.IUsuarioService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,19 +28,17 @@ public class UsuarioController {
     @Autowired
     private IUsuarioService usuarioService;
 
-@PutMapping("/{id}")
-public ResponseEntity<UsuarioProfileResponseDTO> actualizarUsuario(
+@PutMapping("/update/{id}")
+    public ResponseEntity<UsuarioProfileResponseDTO> actualizarUsuario(
         @PathVariable Long id,
         @RequestBody UsuarioUpdateRequestDTO request) {
 
     // Obtener usuario logueado desde el token
     var auth = SecurityContextHolder.getContext().getAuthentication();
-    if (auth == null || auth.getPrincipal() == null) {
-        throw new RuntimeException("Usuario no autenticado");
-    }
+    var principal = (AuthUser) auth.getPrincipal();
+    if (!principal.id().equals(id)) throw new AccessDeniedException("No autorizado");
 
-    String username = auth.getPrincipal().toString();
-    Usuario loggedUser = usuarioService.findUser(username);
+    Usuario loggedUser = usuarioService.findUser(principal.username());
 
     // Validar que el usuario solo pueda modificar su propio perfil
     if (!loggedUser.getId().equals(id)) {

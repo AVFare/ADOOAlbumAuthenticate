@@ -1,7 +1,8 @@
 package com.adoo.album.service;
 
-import com.adoo.album.core.interfaces.IObserver;
-import com.adoo.album.core.interfaces.NotificationRequest;
+import com.adoo.album.core.observer.IObserver;
+import com.adoo.album.model.dto.NotificationRequest;
+import com.adoo.album.service.impl.NotificationSubject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,6 +1,6 @@
 package com.adoo.album.model.dto;
 
-import com.adoo.album.model.entity.Role;
+import com.adoo.album.model.enums.Role;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

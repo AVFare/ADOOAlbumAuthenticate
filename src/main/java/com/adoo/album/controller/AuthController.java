@@ -11,7 +11,7 @@ import com.adoo.album.model.dto.LoginRequestDTO;
 import com.adoo.album.model.dto.LoginResponseDTO;
 import com.adoo.album.model.dto.RegisterRequestDTO;
 import com.adoo.album.model.dto.RegisterResponseDTO;
-import com.adoo.album.service.IAuthService;
+import com.adoo.album.service.api.IAuthService;
 
 @RestController
 @RequestMapping("/auth")

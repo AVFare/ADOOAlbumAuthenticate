@@ -1,7 +1,8 @@
 package com.adoo.album.service;
 
 import com.adoo.album.model.entity.AuditLog;
-import com.adoo.album.model.infrastructure.IAuditLogRepository;
+import com.adoo.album.infrastructure.persistence.repository.IAuditLogRepository;
+import com.adoo.album.service.impl.AuditRepositoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

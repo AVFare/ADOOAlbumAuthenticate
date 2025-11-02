@@ -1,8 +1,8 @@
 package com.adoo.album.controller;
 
-import com.adoo.album.core.interfaces.IObservable;
-import com.adoo.album.core.interfaces.NotificationRequest;
-import com.adoo.album.service.AuditLogObserver;
+import com.adoo.album.core.observer.IObservable;
+import com.adoo.album.model.dto.NotificationRequest;
+import com.adoo.album.service.impl.AuditLogObserver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +13,7 @@ import jakarta.annotation.PostConstruct;
  * Controlador REST para gestionar notificaciones.
  */
 @RestController
-@RequestMapping("/api/notifications")
+@RequestMapping("/notifications")
 @CrossOrigin(origins = "*")
 public class NotificacionesController {
     
@@ -37,7 +37,7 @@ public class NotificacionesController {
      * Crea una nueva notificación y la procesa
      * @param body NotificationRequest con userId, tipoEvento y detalle
      */
-    @PostMapping
+    @PostMapping("/create")
     public void crearNotificacion(@RequestBody NotificationRequest body) {
         // Validaciones básicas
         if (body.getUserId() == null) {

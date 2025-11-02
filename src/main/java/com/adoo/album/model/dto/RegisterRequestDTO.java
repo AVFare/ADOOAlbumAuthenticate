@@ -2,7 +2,7 @@ package com.adoo.album.model.dto;
 
 import java.sql.Date;
 
-import com.adoo.album.model.entity.Role;
+import com.adoo.album.model.enums.Role;
 
 import lombok.*;
 
