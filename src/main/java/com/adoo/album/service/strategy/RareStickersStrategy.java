@@ -28,10 +28,14 @@ public class RareStickersStrategy implements IReporteStrategy {
         
         List<Map<String, Object>> resultados = stickersRaras.stream()
          .map(s -> {
-             Map<String, Object> stickerMap = new java.util.HashMap<>();
-             stickerMap.put("sticker_id", s.getId());
-             stickerMap.put("album_titulo", s.getAlbum().getTitulo()); 
-             return stickerMap;
+            Map<String, Object> stickerMap = new java.util.HashMap<>();
+            stickerMap.put("sticker_id", s.getId());
+            stickerMap.put("nombre", s.getNombre());
+            stickerMap.put("rareza", s.getRareza().name());
+            stickerMap.put("stock_disponible", s.getStockDisponible());
+            stickerMap.put("stock_total", s.getStockTotal());
+            stickerMap.put("album_titulo", s.getAlbum().getTitulo()); 
+            return stickerMap;
          })
          .collect(Collectors.toList());
 

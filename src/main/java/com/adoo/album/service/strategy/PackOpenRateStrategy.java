@@ -37,6 +37,8 @@ public class PackOpenRateStrategy implements IReporteStrategy {
         double tasaApertura = (totalCompradoresUnicos > 0) ? (double) totalPacksComprados / totalCompradoresUnicos : 0.0;
 
         List<Map<String, Object>> resultados = List.of(
+            Map.of("Metrica", "Total de Paquetes Comprados", "Valor", totalPacksComprados),
+            Map.of("Metrica", "Total de Usuarios Compradores Únicos", "Valor", totalCompradoresUnicos),
             Map.of("Metrica", "Tasa Promedio de Apertura (Paquetes/Comprador)", "Valor", String.format("%.2f", tasaApertura))
         );
 
