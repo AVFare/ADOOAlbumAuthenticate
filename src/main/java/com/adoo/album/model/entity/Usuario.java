@@ -13,12 +13,12 @@ import java.sql.Date;
 @Builder
 @AllArgsConstructor
 @Entity
-@NoArgsConstructor // Lombok generates the default constructor
+@NoArgsConstructor 
 @Table(name = "user", uniqueConstraints = {
     @UniqueConstraint(columnNames = "username"),
     @UniqueConstraint(columnNames = "email")
 })
-public class Usuario { // Renamed from User to Usuario, as per your code
+public class Usuario { 
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,8 +28,6 @@ public class Usuario { // Renamed from User to Usuario, as per your code
     @Column(nullable = false, unique = true, length = 50)
     private String username;
 
-    // Regla de Negocio: Se recomienda almacenar el hash, no el texto plano.
-    // Usamos 'hash_password' para ser explícitos.
     @Column(name = "password", nullable = false, length = 100)
     private String password; 
 
@@ -60,8 +58,6 @@ public class Usuario { // Renamed from User to Usuario, as per your code
     @Column(name = "created_at", nullable = false, updatable = false)
     private Date created_at = new Date(System.currentTimeMillis());
 
-    // Constructor customizado (sin Lombok, ya que @Data genera getters/setters)
-    // Usamos el password en lugar de hashPassword.
     public Usuario(String username, String password, String email, Role role) {
         this.username = username;
         this.password = password;
