@@ -32,6 +32,7 @@ public class SecurityConfig {
 				.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(authz -> authz
 						.requestMatchers("/auth/login", "/auth/register").permitAll()
+						.requestMatchers(HttpMethod.GET,"reports/**").hasAnyRole("ADMIN")
 						.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 						.anyRequest().authenticated()
 				)
