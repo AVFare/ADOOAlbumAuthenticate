@@ -1,0 +1,127 @@
+{
+	"info": {
+		"_postman_id": "640cfc5b-7beb-4b4d-90c6-af50fb7ee63d",
+		"name": "Modulo Notificaciones",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34418126"
+	},
+	"item": [
+		{
+			"name": "COMPRA_PAQUETE",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbl9udWV2byIsInVzZXJJZCI6MTIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc2MjExNjc0MywiZXhwIjoxNzYyMTIwMzQzfQ.4FS3MWA_AiZtSTTyTJ34AWzyajBqKbgHfMiePTSEWUI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"userId\": 12,\r\n  \"tipoEvento\": \"COMPRA_PAQUETE\",\r\n  \"detalle\": \"Usuario compró 3 paquetes\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/notifications/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"notifications",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ALBUM_COMPLETADO",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbl9udWV2byIsInVzZXJJZCI6MTIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc2MjExNjc0MywiZXhwIjoxNzYyMTIwMzQzfQ.4FS3MWA_AiZtSTTyTJ34AWzyajBqKbgHfMiePTSEWUI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"userId\": 12,\r\n  \"tipoEvento\": \"ALBUM_COMPLETADO\",\r\n  \"detalle\": \"Usuario completó su álbum y obtuvo la recompensa final\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/notifications/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"notifications",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "INTERCAMBIO_ACEPTADO",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbl9udWV2byIsInVzZXJJZCI6MTIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc2MjExNjc0MywiZXhwIjoxNzYyMTIwMzQzfQ.4FS3MWA_AiZtSTTyTJ34AWzyajBqKbgHfMiePTSEWUI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"userId\": 12,\r\n  \"tipoEvento\": \"INTERCAMBIO_ACEPTADO\",\r\n  \"detalle\": \"El usuario 12 realizó un intercambio con el usuario 8\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/notifications/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"notifications",
+						"create"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

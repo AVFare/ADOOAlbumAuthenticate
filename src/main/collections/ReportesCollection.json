@@ -1,0 +1,90 @@
+{
+	"info": {
+		"_postman_id": "e506b4ab-b347-4a30-9b2c-9bb3f66e26c5",
+		"name": "Reportes Marketplace",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20531592"
+	},
+	"item": [
+		{
+			"name": "Obtener Top Álbumes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/reports/top-albums",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"reports",
+						"top-albums"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener Figuritas Raras",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/reports/rare-stickers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"reports",
+						"rare-stickers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User stats",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/reports/user-stats",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"reports",
+						"user-stats"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "pack open rate",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/reports/pack-open-rate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"reports",
+						"pack-open-rate"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

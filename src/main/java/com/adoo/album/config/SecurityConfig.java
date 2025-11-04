@@ -6,9 +6,14 @@ import javax.crypto.SecretKey;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -17,26 +22,39 @@ import io.jsonwebtoken.security.Keys;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-	    http.csrf(csrf -> csrf.disable()) // útil si estás usando Postman
-        .authorizeHttpRequests(authz -> authz
-            //.requestMatchers("/api/clientes").permitAll()
-            .anyRequest().authenticated())
-        .addFilterBefore(jwtAuth(), UsernamePasswordAuthenticationFilter.class);
-    return http.build();
+		http
+				.csrf(csrf -> csrf.disable())
+				.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.authorizeHttpRequests(authz -> authz
+						.requestMatchers("/auth/login", "/auth/register").permitAll()
+						.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+						.anyRequest().authenticated()
+				)
+				.addFilterBefore(jwtAuth(), UsernamePasswordAuthenticationFilter.class);
+
+		return http.build();
 	}
 
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer() {
-		return (web) -> web.ignoring().requestMatchers("saludos/hola", "auth/login");
+		return (web) -> web.ignoring()
+			.requestMatchers("auth/register", "auth/login");
 	}
+
 
 	@Bean
 	public JwtAuthFilter jwtAuth() {
 		return new JwtAuthFilter(secretKey());
+	}
+
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
 	}
 
 	@Bean

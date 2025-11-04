@@ -1,63 +1,67 @@
 package com.adoo.album.model.entity;
 
-import java.util.Date;
+import com.adoo.album.model.enums.Role;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import java.sql.Date;
 
+@Data
+@Builder
+@AllArgsConstructor
 @Entity
-@Table(name = "usuarios")
-public class Usuario {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	private String username;
-	private String password;
+@NoArgsConstructor 
+@Table(name = "user", uniqueConstraints = {
+    @UniqueConstraint(columnNames = "username"),
+    @UniqueConstraint(columnNames = "email")
+})
+public class Usuario { 
 
-	public Usuario() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	public Usuario(String username, String password) {
-		super();
-		this.username = username;
-		this.password = password;
-	}
+    // RF9: Username Inmutable
+    @Column(nullable = false, unique = true, length = 50)
+    private String username;
 
-	public Long getId() {
-		return id;
-	}
+    @Column(name = "password", nullable = false, length = 100)
+    private String password; 
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    // RF9: Perfil - Campos adicionales
+    @Column(length = 100)
+    private String nombre;
 
-	public String getUsername() {
-		return username;
-	}
+    @Column(length = 100)
+    private String apellido;
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    @Column(length = 20)
+    private int telefono;
 
-	public String getPassword() {
-		return password;
-	}
+    // RF9: Perfil - URL para la foto
+    @Column(name = "avatar_url", length = 255)
+    private String Avatar_url;
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    // RF1: Roles y Autenticación
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 10)
+    private Role role; // ADMIN, USER
 
-	@Override
-	public String toString() {
-		return "Usuario [id=" + id + ", username=" + username + ", password=" + password + "]";
-	}
+    // RF9: Email y validación única
+    @Column(nullable = false, unique = true, length = 100)
+    private String email;
+    
+    // RF10: Auditoría - Campo de creación
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Date created_at = new Date(System.currentTimeMillis());
 
+    public Usuario(String username, String password, String email, Role role) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+    }
 }
