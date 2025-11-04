@@ -4,7 +4,6 @@ import com.adoo.album.infrastructure.persistence.repository.PackRepository;
 import com.adoo.album.infrastructure.persistence.repository.UserRepository;
 import com.adoo.album.model.dto.ReporteDTO;
 import org.springframework.stereotype.Component;
-// ... (otros imports) ...
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +37,6 @@ public class PackOpenRateStrategy implements IReporteStrategy {
         double tasaApertura = (totalCompradoresUnicos > 0) ? (double) totalPacksComprados / totalCompradoresUnicos : 0.0;
 
         List<Map<String, Object>> resultados = List.of(
-            // ... (Map.of con las métricas) ...
             Map.of("Metrica", "Tasa Promedio de Apertura (Paquetes/Comprador)", "Valor", String.format("%.2f", tasaApertura))
         );
 

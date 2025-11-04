@@ -3,7 +3,6 @@ package com.adoo.album.service.strategy;
 import com.adoo.album.infrastructure.persistence.repository.UserRepository;
 import com.adoo.album.model.dto.ReporteDTO;
 import org.springframework.stereotype.Component;
-// ... (otros imports) ...
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

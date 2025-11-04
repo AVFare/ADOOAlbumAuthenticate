@@ -4,7 +4,6 @@ import com.adoo.album.infrastructure.persistence.repository.StickerRepository;
 import com.adoo.album.model.dto.ReporteDTO;
 import com.adoo.album.model.entity.Sticker;
 import org.springframework.stereotype.Component;
-// ... (otros imports) ...
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -31,7 +30,6 @@ public class RareStickersStrategy implements IReporteStrategy {
          .map(s -> {
              Map<String, Object> stickerMap = new java.util.HashMap<>();
              stickerMap.put("sticker_id", s.getId());
-             // ... (resto de los .put) ...
              stickerMap.put("album_titulo", s.getAlbum().getTitulo()); 
              return stickerMap;
          })
