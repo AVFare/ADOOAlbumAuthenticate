@@ -1,0 +1,48 @@
+package com.adoo.album.service.strategy;
+
+import com.adoo.album.infrastructure.persistence.repository.StickerRepository;
+import com.adoo.album.model.dto.ReporteDTO;
+import com.adoo.album.model.entity.Sticker;
+import org.springframework.stereotype.Component;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+@Component
+public class RareStickersStrategy implements IReporteStrategy {
+
+    private final StickerRepository stickerRepository;
+
+    public RareStickersStrategy(StickerRepository stickerRepository) {
+        this.stickerRepository = stickerRepository;
+    }
+
+    @Override
+    public String getTipoReporte() {
+        return "RARE_STICKERS";
+    }
+
+    @Override
+    public ReporteDTO generar() {
+        List<Sticker> stickersRaras = stickerRepository.findTop10ByOrderByRarezaDescStockDisponibleAsc();
+        
+        List<Map<String, Object>> resultados = stickersRaras.stream()
+         .map(s -> {
+            Map<String, Object> stickerMap = new java.util.HashMap<>();
+            stickerMap.put("sticker_id", s.getId());
+            stickerMap.put("nombre", s.getNombre());
+            stickerMap.put("rareza", s.getRareza().name());
+            stickerMap.put("stock_disponible", s.getStockDisponible());
+            stickerMap.put("stock_total", s.getStockTotal());
+            stickerMap.put("album_titulo", s.getAlbum().getTitulo()); 
+            return stickerMap;
+         })
+         .collect(Collectors.toList());
+
+        return new ReporteDTO(
+            getTipoReporte(),
+            "Figuritas con menor stock disponible (las más difíciles de obtener).",
+            resultados
+        );
+    }
+}
