@@ -2,6 +2,9 @@ package com.adoo.album.controller;
 
 import com.adoo.album.config.JwtAuthFilter;
 import com.adoo.album.security.AuthUser;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import com.adoo.album.model.dto.UsuarioProfileResponseDTO;
 import com.adoo.album.model.dto.UsuarioUpdateRequestDTO;
@@ -23,11 +27,24 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/usuarios")
 @RequiredArgsConstructor
+@Tag(name = "Usuarios", description = "Endpoints para consulta y actualización de perfiles de usuario")
 public class UsuarioController {
 
     @Autowired
     private IUsuarioService usuarioService;
 
+@Operation(
+        summary = "Actualizar el perfil del usuario autenticado",
+        description = "Permite que un usuario autenticado actualice únicamente su propio perfil. " +
+                "El id del path debe coincidir con el id presente en el token JWT.",
+        responses = {
+                @ApiResponse(responseCode = "200", description = "Perfil actualizado correctamente"),
+                @ApiResponse(responseCode = "401", description = "No autenticado", content = @Content),
+                @ApiResponse(responseCode = "403", description = "No autorizado para modificar este perfil", content = @Content),
+                @ApiResponse(responseCode = "404", description = "Usuario no encontrado", content = @Content),
+                @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
+        }
+)
 @PutMapping("/update/{id}")
     public ResponseEntity<UsuarioProfileResponseDTO> actualizarUsuario(
         @PathVariable Long id,
@@ -63,6 +80,15 @@ public class UsuarioController {
 }
 
 
+    @Operation(
+            summary = "Obtener perfil de un usuario por id",
+            description = "Devuelve el perfil de un usuario por su id. " ,
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Perfil obtenido correctamente"),
+                    @ApiResponse(responseCode = "404", description = "Usuario no encontrado", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
+            }
+    )
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioProfileResponseDTO> obtenerPerfil(@PathVariable Long id) {
         // GET sigue siendo público

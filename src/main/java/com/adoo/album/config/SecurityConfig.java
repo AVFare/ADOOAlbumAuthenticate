@@ -6,6 +6,7 @@ import javax.crypto.SecretKey;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,13 +27,27 @@ import io.jsonwebtoken.security.Keys;
 public class SecurityConfig {
 
 	@Bean
+	@Order(1)
+	public SecurityFilterChain swaggerSecurity(HttpSecurity http) throws Exception {
+		http
+				.securityMatcher("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**")
+				.csrf(csrf -> csrf.disable())
+				.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.authorizeHttpRequests(authz -> authz
+						.anyRequest().permitAll()
+				);
+		return http.build();
+	}
+
+	@Bean
+	@Order(2)
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
 				.csrf(csrf -> csrf.disable())
 				.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(authz -> authz
 						.requestMatchers("/auth/login", "/auth/register").permitAll()
-						.requestMatchers(HttpMethod.GET,"reports/**").hasAnyRole("ADMIN")
+						.requestMatchers(HttpMethod.GET,"/reports/**").hasAnyRole("ADMIN")
 						.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 						.anyRequest().authenticated()
 				)
